@@ -1,0 +1,27 @@
+version: "3.1"
+services:
+  django:
+    build: ./core
+    container_name: django
+    restart: always
+    ports:
+      - 8000:8000
+    volumes:
+      - ./core:/app/django
+    networks:
+      - django-network
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+
+  react:
+    build: ./react
+    container_name: react
+    restart: always
+    volumes:
+      - ./react:/app/react
+    networks:
+      - django-network
+    command: ["npm", "start"]
+
+networks:
+  django-network:
+    driver: bridge
