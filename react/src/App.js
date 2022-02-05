@@ -1,6 +1,6 @@
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
-import { Home } from './Home/Home';
-import { Edit } from './Edit-profile/Edit';
+import { Home } from './Components/Home/Home';
+import { Edit } from './Components/Edit-profile/Edit';
 
 function App() {
   return (
