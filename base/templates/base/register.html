@@ -3,13 +3,13 @@
   <form method="POST">
     {% csrf_token %}
     <fieldset class="form-group">
-      <h2>Login</h2>
+      <h2>Register</h2>
       {{ form|crispy }}
     </fieldset>
-    <div class="form-group">
-      <button class="btn btn-primary" type="submit">Login</button>
-    </div>
+
+    <button class="btn btn-primary" type="submit">Register</button>
   </form>
-  <small class="text-muted">Don't have an account? <a href="{% url 'register'%}">sign up</a></small>
+  <small class="text-muted">Already have an account? <a href="{% url 'login'%}">sign in</a></small>
 </div>
+
 {% endblock content %}
