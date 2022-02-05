@@ -6,11 +6,8 @@ function App() {
   return (
     <div className='App'>
       <BrowserRouter>
-        <Navbar/>
         <Routes>
           <Route path="/home" element={<Home/>}/>
-        </Routes>
-        <Routes>
           <Route path="/edit-profile" element={<Edit/>}/>
         </Routes>
       </BrowserRouter>
