@@ -1,3 +1,4 @@
+
 import React, {Fragment} from "react"
 import {useState, useEffect} from "react"
 import {BsGearFill, BsFillPencilFill} from "react-icons/bs"
@@ -5,6 +6,7 @@ import {MdSwipe} from "react-icons/md"
 import {useNavigate} from "react-router-dom"
 import axios from "axios"
 import Cookies from "js-cookie"
+import { motion } from 'framer-motion'
 
 export const Home = props => {
   const [name, setName] = useState(null)
@@ -62,26 +64,47 @@ export const Home = props => {
   }
 
   return (
-    <div className="container d-flex flex-column w-100 vh-100 justify-content-center align-items-center" style={{background: "#FFF4E0"}}>
-      {name && prof ? (
+    <div className='container d-flex flex-column w-100 vh-100 justify-content-center align-items-center' style={{background: "#FFF4E0"}}>
+       {name && prof ? (
         <Fragment>
-          <img src={prof} alt="" style={imageStyle} />
-          <h1>{name}</h1>
-          <div className="container d-flex flex-row w-50 justify-content-center">
-            <button className="btn m-2" style={buttonStyle} onClick={() => navigate("/settings")}>
-              <BsGearFill style={iconStyle} />
-            </button>
-            <button className="btn m-2" style={buttonStyle} onClick={() => navigate("/edit-profile")}>
-              <BsFillPencilFill style={iconStyle} />
-            </button>
-            <button className="btn m-2" style={buttonStyle} onClick={() => navigate("/match")}>
-              <MdSwipe style={iconStyle} />
-            </button>
-          </div>
-        </Fragment>
-      ) : (
-        <h2>Loading...</h2>
-      )}
+      <img 
+        src={prof} 
+        alt=""
+        style={imageStyle}
+      />
+      <h1>{name}</h1>
+      <div className="container d-flex flex-row w-50 justify-content-center">
+        <motion.div className="" whileHover={{scale:1.1}}>
+          <button 
+            className='btn m-2' 
+            style={buttonStyle}
+            onClick = {() => navigate('/settings')}
+          >
+            <BsGearFill style={iconStyle}/>
+          </button>
+        </motion.div>
+        <motion.div className="" whileHover={{scale:1.1}}>
+          <button 
+            className='btn m-2'
+            style={buttonStyle}
+            onClick = {() => navigate('/edit')}
+          >
+            <BsFillPencilFill style={iconStyle}/>
+          </button>
+        </motion.div>
+        <motion.div className="" whileHover={{scale:1.1}}>
+          <button 
+            className='btn m-2' 
+            style={buttonStyle}
+            onClick={() => navigate('/match')}
+          >
+            <MdSwipe style={iconStyle}/>
+          </button>
+        </motion.div>
+      </div>
+</Fragment>):(
+<h2>Loading...</h2>
+)}
     </div>
   )
 }

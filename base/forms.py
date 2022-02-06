@@ -17,13 +17,19 @@ class UserRegisterForm(UserCreationForm):
 class ProfileRegisterForm(forms.ModelForm):
 
 	genders = (
-		("male", "Male"),
-		("female", "Female"),
-		("other", "Other")
+		(0, "Male"),
+		(1, "Female"),
+		(2, "Non-Binary")
 	)
 
 	races = (
-		("idk", "idk"),
+		(0, "All Races"),
+		(1, "Black or African American"),
+		(2, "White"),
+		(3, "Asian"),
+		(4, "American Indian or Alaska Native"),
+		(5, "Native Hawaiian or Pasific Islander")
+
 	)
 
 	gender = forms.ChoiceField(choices=genders)

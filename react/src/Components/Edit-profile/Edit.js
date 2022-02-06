@@ -27,6 +27,7 @@ export const Edit = props => {
     }
   }, [props.user])
 
+
   function editUsers() {
     let changes = {}
     if (isSwitchOn !== props.user.visible) {

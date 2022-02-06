@@ -59,7 +59,6 @@ export const Match = () => {
     const [displayedUser, setDisplayedUser] = useState({});
     const [userIndex, setUserIndex] = useState(0);
 
-
     useEffect(() => {
         axios.get("/api/get-matching-users", { headers: { "X-CSRFTOKEN": Cookies.get("csrftoken") } })
             .then(res => {
@@ -143,7 +142,7 @@ export const Match = () => {
                 {matchedUsers.length > userIndex - 1 ? (
                     <div>
                         <div className="imageDiv" style={{ height: "60%", backgroundColor: "white", overflow: "hidden" }}>
-                            <img src={window.location.origin + displayedUser?.avatar} style={image} />
+                            <img src={displayedUser?.avatar} style={image} />
                         </div>
                         <div className="lowerPanel d-flex flex-column justify-content-around mx-5 my-3">
                             <div className="intro text-left" >
