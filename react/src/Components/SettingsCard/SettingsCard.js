@@ -1,9 +1,18 @@
 import React from 'react';
-import { useEffect } from 'react';
+import { useState } from 'react';
+import Box from '@mui/material/Box';
+import Slider from '@mui/material/Slider';
+
+
 
 export const SettingsCard = () => {
 
-    
+    const [age, setAge] = useState([20, 37])
+
+    function valuetext(age) {
+        return `${age}`;
+    }
+
     const buttonStyle = {
         border: "2px solid black",
         borderRadius: "2rem"
@@ -14,14 +23,13 @@ export const SettingsCard = () => {
         borderRadius: "2rem"
     }
 
-    const labelStyle = {
-
-    }
-    
     const handleClick = () => {
         // make api call here
     }
 
+    const handleChange = (e, newValue) => {
+        setAge(newValue)
+    }
 
     return(
         <div className='card d-flex w-50 h-50 justify-content-center' style={{borderRadius:"2rem"}}>
@@ -32,10 +40,15 @@ export const SettingsCard = () => {
                         <label for="ageRange">Age Range</label>
                     </div>
                     <div className="col">
-                        <input type="number" min="0" max="100" class="form-control" id="ageLB" aria-describedby="ageUB" style={inputStyle}/>
-                    </div>
-                    <div className="col">
-                        <input type="number" min ="0" max="100" class="form-control" id="ageUB" aria-describedby="ageUB" style={inputStyle}/>
+                    <Box sx={{width:300}}>
+                    <Slider
+                        getAriaLabel={() => 'Temperature range'}
+                        value={age}
+                        onChange={handleChange}
+                        valueLabelDisplay="auto"
+                        getAriaValueText={valuetext}
+                    />
+                    </Box>
                     </div>
                 </div>
                 <div className="row pt-4">
