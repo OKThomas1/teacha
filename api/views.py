@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 from base.models import Swipe, Profile, Message
 import requests
 import math
-
+from rest_framework.parsers import FileUploadParser
 # Create your views here.
 
 
@@ -208,12 +208,28 @@ class UpdateProfileView(APIView):
 		if len(errors) > 0:
 			return Response(errors, status=status.HTTP_400_BAD_REQUEST)
 		try:
-			if request.data['picture']:
-				request.user.profile.update(**changes, avatar=request.data['picture'])
-			else:
-				request.user.profile.update(**changes)
-		except:
+			Profile.objects.filter(user=request.user).update(**changes)
+		except Exception as ex:
+			print(ex)
 			return Response({"error":"failed to update user"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-		return Response({"success": "successfully updated user"}, status=status.HTTP_200_OK)
+		
+		data = PublicProfileSerializer(request.user.profile).data
+		return Response(data, status=status.HTTP_200_OK)
+
+
+class UpdateProfilePictureView(APIView):
+
+	parser_classes = (FileUploadParser, )
+
+	def put(self, request):
+		try:
+			image = request.FILES['file']
+
+			Profile.objects.filter(user=request.user).update(avatar=image)
+			data = PublicProfileSerializer(request.user.profile).data
+			return Response(data, status=status.HTTP_200_OK)
+		except Exception as ex:
+			print(ex)
+			return Response({"error": "could not update profile picture"}, status=status.HTTP_400_BAD_REQUEST)
 
 
