@@ -123,7 +123,6 @@ export const Match = () => {
             {messageModal ? (<MessageModal MessageModal={MessageModal} setMessageModal={setMessageModal} />) : " "}
 
             <div className=" w-50 m-auto" style={{ height: "90%", borderRadius: "2rem", overflow: "hidden", backgroundColor: "#8ac6d1" }}>
-
                 <button style={messageButtonDiv} onClick={(e) => {
                     e.preventDefault();
                     setMessageModal(true);
@@ -149,7 +148,7 @@ export const Match = () => {
                                 <h1>{displayedUser?.first_name} {displayedUser?.last_name}</h1>
                                 <p className="introText overflow-hidden" style={{ maxHeight: 110, height: 110 }}>
                                     <p className="font-weight-bold">Description: </p>
-                                    {displayedUser.bio}
+                                    {displayedUser?.bio}
                                 </p>
                             </div>
 
@@ -183,14 +182,12 @@ export const Match = () => {
                         </div>
                     </div>
                 ) : (
-                    <div>
+                    <div className="bg-dark vh-100 text-white">
                         <h1>
                             No more matches....
                         </h1>
                     </div>
                 )}
-
-
 
             </div>
 
