@@ -38,8 +38,6 @@ export const Home = () => {
     if(!localStorage.getItem('radius')){
       localStorage.setItem('radius', null)
     }
-
-
   })
 
   const buttonStyle = {

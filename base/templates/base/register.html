@@ -1,12 +1,12 @@
-{% extends 'base/base.html' %} {% load crispy_forms_tags %} {% block content %}
-<div class="container content-section">
+{% extends 'base/base.html' %} {% load crispy_forms_tags %} {% block content %} 
+
+<div class="background container content-section">
   <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     <fieldset class="form-group">
-      <h2>Register</h2>
-      {{ user_form|crispy }} {{ profile_form|crispy }}
+        <h2>Register</h2>
+        {{ user_form|crispy }} {{ profile_form|crispy }}
     </fieldset>
-
     <button class="btn btn-primary" type="submit">Register</button>
   </form>
   <small class="text-muted">Already have an account? <a href="{% url 'login'%}">sign in</a></small>

@@ -1,0 +1,26 @@
+.body {
+    background-color: #FFF4E0;
+    height:100vw;
+}
+
+.background {
+    background-color: #FFF4E0;
+}
+
+.header {
+    width: 100vw;
+    height: 5vw;
+    background-color: #FFF4E0;
+    display:flex;
+    flex-direction: row;
+    padding-left: 5vw;
+
+}
+
+.header img {
+    float: left;
+    width: 100px;
+    height: 100px;
+    background: #555;
+    margin-top: 10px;
+  }
