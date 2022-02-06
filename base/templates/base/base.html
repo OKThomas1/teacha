@@ -15,8 +15,9 @@
     <main role="main" class="container">
       {% if messages %} {% for message in messages %}
       <div class="alert alert-{{ message.tags }}" style="text-align: center">{{ message }}</div>
-      {% endfor %} {% endif %} {% block content %} {% endblock %}
+      {% endfor %} {% endif %}
     </main>
+    {% block content %} {% endblock %}
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

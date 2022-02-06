@@ -1,10 +1,10 @@
 {% extends 'base/base.html' %} {% load crispy_forms_tags %} {% block content %}
 <div class="container content-section">
-  <form method="POST">
+  <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     <fieldset class="form-group">
       <h2>Register</h2>
-      {{ form|crispy }}
+      {{ user_form|crispy }} {{ profile_form|crispy }}
     </fieldset>
 
     <button class="btn btn-primary" type="submit">Register</button>
