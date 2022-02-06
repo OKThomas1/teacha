@@ -1,20 +1,24 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import { Home } from './Components/Home/Home';
-import { Edit } from './Components/Edit-profile/Edit';
-import { Match } from "./Components/Match/Match";
+
+import {BrowserRouter, Routes, Route} from "react-router-dom"
+import {Home} from "./Components/Home/Home"
+import {Edit} from "./Components/Edit-profile/Edit"
+import {Settings} from "./Components/Settings/Settings"
 
 function App() {
   return (
-    <div className='App w-100'>
+    <div className="App">
+
       <BrowserRouter>
         <Routes>
           <Route path="/home" element={<Home />} />
           <Route path="/edit-profile" element={<Edit />} />
-          <Route path="/match" element={<Match />} />
+
+          <Route path="/settings" element={<Settings />} />
+
         </Routes>
       </BrowserRouter>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

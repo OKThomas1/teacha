@@ -1,24 +1,19 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
-
-
-
+import {useEffect} from "react"
+import axios from "axios"
+import Cookies from "js-cookie"
 
 export const Home = () => {
-  const selectButton = {
-    backgroundColor: "purple",
-    color: "blue"
-  }
-  return (
+  useEffect(() => {
+    axios
+      .get("/api/get-right-swipes", {headers: {"X-CSRFTOKEN": Cookies.get("csrftoken")}})
+      .then(res => {
+        console.log(res.data)
+      })
+      .catch(err => {
+        console.error(err)
+      })
+  }, [])
 
+  return <div>Home Page</div>
+}
 
-    < div className="bg-dark vh-100 w-100 text-center" >
-      <div className="" >
-
-      </div>
-
-
-    </div >
-
-  )
-};
