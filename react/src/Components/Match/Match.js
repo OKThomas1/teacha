@@ -1,11 +1,14 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { MdFavorite, MdCancel } from 'react-icons/md';
+import { MdFavorite, MdCancel, MdArrowBackIosNew } from 'react-icons/md';
 import { AiFillStar } from 'react-icons/ai';
 import { IoCheckmarkCircleSharp } from 'react-icons/io5';
 import { ImCancelCircle } from 'react-icons/im';
 import { BiMessageDetail, BiNoEntry } from 'react-icons/bi';
 import { BsFillSkipBackwardCircleFill } from 'react-icons/bs';
+import MessageModal from './MessageModal';
+import { Link } from 'react-router-dom';
+
 export const Match = () => {
     const image = {
         width: "100%", // note to change picture height based on display size, implement if time allows
@@ -52,14 +55,24 @@ export const Match = () => {
 
     return (
         <div className="vh-100 w-100 text-center d-flex justify-center" style={{ backgroundColor: "#FFF4E0" }} >
+            {messageModal ? (<MessageModal MessageModal={MessageModal} setMessageModal={setMessageModal} />) : " "}
+
+
 
             <div className=" w-75 m-auto" style={{ height: "90%", borderRadius: "2rem", overflow: "hidden", backgroundColor: "#8ac6d1" }}>
-                <button style={messageButtonDiv}>
+
+                <button style={messageButtonDiv} onClick={(e) => {
+                    e.preventDefault();
+                    setMessageModal(true);
+                }}>
                     <BiMessageDetail style={menuButton} />
                 </button>
 
                 <button style={backButtonDiv}>
-                    <BiMessageDetail style={menuButton} />
+                    <Link to="/home">
+                        <MdArrowBackIosNew style={menuButton} />
+                    </Link>
+
                 </button>
 
 
