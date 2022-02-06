@@ -10,21 +10,15 @@ function App() {
 
       <BrowserRouter>
         <Routes>
-<<<<<<< HEAD
-          <Route path="/home" element={<Home/>}/>
-          <Route path="/edit" element={<Edit/>}/>
-          <Route path="/settings" element = {<Settings/>}/>
-=======
+
           <Route path="/home" element={<Home />} />
           <Route path="/edit-profile" element={<Edit />} />
 
           <Route path="/settings" element={<Settings />} />
           <Route path="/match" element={<Match />} />
-
->>>>>>> 7f3fc0711a2e826fff5580f72e13796a59fc8375
-        </Routes>
-      </BrowserRouter>
-    </div>
+        </Routes >
+      </BrowserRouter >
+    </div >
   )
 }
 
