@@ -11,6 +11,8 @@ urlpatterns = [
 	path('get-right-swipes', views.GetRightSwipesView.as_view()),
 	path('get-messages', views.GetMessagesView.as_view()),
 	path('send-message', views.SendMessageView.as_view()),
-	path('get-matched-users', views.GetMatchedUsersView.as_view())
+	path('get-matched-users', views.GetMatchedUsersView.as_view()),
+	path('update-user', views.UpdateProfileView.as_view()),
+	path('update-profile-picture', views.UpdateProfilePictureView.as_view())
 ]
 

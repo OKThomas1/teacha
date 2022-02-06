@@ -11,6 +11,10 @@ import Cookies from "js-cookie"
 function App() {
   const [self, setSelf] = useState(null)
 
+  const updateSelf = user => {
+    setSelf(user)
+  }
+
   useEffect(() => {
     axios
       .get("/api/get-self", {headers: {"X-CSRFTOKEN": Cookies.get("csrftoken")}})
@@ -29,7 +33,7 @@ function App() {
         <Header />
         <Routes>
           <Route path="/home" element={<Home user={self} />} />
-          <Route path="/edit" element={<Edit user={self} />} />
+          <Route path="/edit" element={<Edit user={self} updateSelf={updateSelf} />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/match" element={<Match />} />
         </Routes>
