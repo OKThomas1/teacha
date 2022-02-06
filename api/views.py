@@ -11,6 +11,8 @@ from base.models import Swipe, Profile, Message
 
 class GetSelfView(APIView):
 	def get(self, request):
+		if not request.user.is_authenticated:
+			return Response({"error": "you are not authenticated"}, status=status.HTTP_400_BAD_REQUEST)
 		profile = request.user.profile 
 		data = PublicProfileSerializer(profile).data
 		return Response(data, status=status.HTTP_200_OK)
@@ -55,7 +57,7 @@ class SwipeLeftView(APIView):
 	def post(self, request):
 		swiper = request.user.profile
 		swiped = Profile.objects.filter(user__username=request.data['username'])
-		if len(swiped > 0):
+		if len(swiped) > 0:
 			swiped = swiped[0]
 			if swiped.mentor == swiper.mentor:
 				return Response({'error': 'cannot swipe on a user of the same type'}, status=status.HTTP_400_BAD_REQUEST)
@@ -68,14 +70,14 @@ class SwipeRightView(APIView):
 	def post(self, request):
 		swiper = request.user.profile
 		swiped = Profile.objects.filter(user__username=request.data['username'])
-		if len(swiped > 0):
+		if len(swiped) > 0:
 			swiped = swiped[0]
 			if swiped.mentor == swiper.mentor:
 				return Response({'error': 'cannot swipe on a user of the same type'}, status=status.HTTP_400_BAD_REQUEST)
 			Swipe.objects.create(swiper=swiper, swiped=swiped, swipe_type="right")
-			return Response({'success': 'successfully swiped right'}, status=status.http_200_ok)
+			return Response({'success': 'successfully swiped right'}, status=status.HTTP_200_OK)
 		else:
-			return Response({"error": "could not get user with the provided username"}, status=status.http_404_not_found)
+			return Response({"error": "could not get user with the provided username"}, status=status.HTTP_404_NOT_FOUND)
 
 
 class GetRightSwipesView(APIView):
@@ -85,19 +87,17 @@ class GetRightSwipesView(APIView):
 			serialized_users = []
 			for swipe in swipes:
 				if swipe.swiper.visible:
-					data = PrivateProfileSerializer(swipe.swiper)
-					if data.is_valid():
-						serialized_users.append(data.data)
+					data = PrivateProfileSerializer(swipe.swiper).data
+					serialized_users.append(data)
 				else:
-					data = PublicProfileSerializer(swipe.swiper)
-					if data.is_valid():
-						serialized_users.append(data.data)
+					data = PublicProfileSerializer(swipe.swiper).data
+					serialized_users.append(data)
 			return Response(serialized_users, status=status.HTTP_200_OK)
 		else:
 			return Response([], status=status.HTTP_200_OK)
 
 
-class GetMessages(generics.ListAPIView):
+class GetMessagesView(generics.ListAPIView):
 	serializer = MessageSerializer
 
 	def get_queryset(self):
