@@ -22,6 +22,24 @@ export const Home = () => {
         setProf(res.data.avatar)
       })
 
+    // initialize local storage if not
+    if(!localStorage.getItem('gender')){
+      localStorage.setItem('gender', null)
+    }
+
+    if(!localStorage.getItem('race')){
+      localStorage.setItem('race', null)
+    }
+
+    if(!localStorage.getItem('age')){
+      localStorage.setItem('age', null )
+    }
+
+    if(!localStorage.getItem('radius')){
+      localStorage.setItem('radius', null)
+    }
+
+
   })
 
   const buttonStyle = {
