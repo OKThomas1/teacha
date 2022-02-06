@@ -74,6 +74,7 @@ export const SettingsCard = () => {
         localStorage.setItem('race', race)
         localStorage.setItem('age', age)
         localStorage.setItem('radius', radius)
+        alert("Search preference saved!")
     }
 
 

@@ -36,7 +36,6 @@ export const Edit = () => {
   <div className = "d-flex justify-content-around vh-100 w-100" style = {{backgroundColor: "#FFF4E0"}}> 
     <div class="row">
       <div class="col-6">
-        <Header/>
           <div className="container">
               <form>
                   <div class="form-group">

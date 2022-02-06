@@ -81,7 +81,7 @@ export const Home = () => {
         <button 
           className='btn m-2'
           style={buttonStyle}
-          onClick = {() => navigate('/edit-profile')}
+          onClick = {() => navigate('/edit')}
         >
           <BsFillPencilFill style={iconStyle}/>
         </button>
