@@ -7,9 +7,11 @@ from base.models import Profile
 
 class UserRegisterForm(UserCreationForm):
 
+    email = forms.EmailField()
+
     class Meta:
         model = User
-        fields = ['first_name','last_name','username', 'password1', 'password2']
+        fields = ['first_name','last_name','email','username', 'password1', 'password2']
 
 
 class ProfileRegisterForm(forms.ModelForm):

@@ -10,6 +10,28 @@ export const Edit = () => {
   const onSwitchAction = () => {
     setIsSwitchOn(!isSwitchOn);
   };
+
+  var apiEndPoint = "";
+  apiEndPoint = "/api/get-matching-users"
+
+  const [user, setUser] = useState();
+
+  function editUsers(){
+    axios.put(apiEndPoint, 
+      {
+        work: document.getElementById("work").value,
+        job: document.getElementById("job").value,
+        school: document.getElementById("school").value,        
+        education: document.getElementById("education").value,
+        hometown: document.getElementById("hometown").value
+      },
+      {headers: {"X-CSRFTOKEN": Cookies.get("csrftoken")}}).then((res) => {setUser(res.data);
+      console.log(res);
+    }).catch((err) => {
+      console.log(err);
+    })
+  }
+
   return(
   <div className = "d-flex justify-content-around vh-100 w-100" style = {{backgroundColor: "#FFF4E0"}}> 
     <div class="row">
@@ -28,7 +50,7 @@ export const Edit = () => {
                                 onlabel='Visible'
                                 offlabel='Not Visible'
                                 onChange={onSwitchAction}/>
-                            <textarea class="form-control" id="title" rows="1"></textarea>
+                            <textarea class="form-control" id="work" rows="1"></textarea>
                       </div>
 
 
@@ -42,7 +64,7 @@ export const Edit = () => {
                               onlabel='Visible'
                               offlabel='Not Visible'
                               onChange={onSwitchAction}/>
-                          <textarea class="form-control" id="title" rows="1"></textarea>
+                          <textarea class="form-control" id="job" rows="1"></textarea>
                       </div>
 
                       <div class="row">
@@ -92,7 +114,7 @@ export const Edit = () => {
               <center>
                 <div class = "container">
               <div class="col-xs-12 col-xs-offset-0 col-sm-offset-3 col-sm-6">
-                <button type = "button" outline class="btn btn-light btn-lg btn-block" size="lg" block>Save</button>
+                <button onClick = {event => editUsers()} type = "button" outline class="btn btn-light btn-lg btn-block" size="lg" block>Save</button>
               </div>
               </div>
               </center>
@@ -101,13 +123,18 @@ export const Edit = () => {
       </div>
       <div class="col-4">
           <div className = "row">
-          <div class = "container">
-              <div class = "d-flex justify-content-center">
-                  <img src={Image} class="rounded img-fluid d-flex justify-content-center" alt="..."/>
-              </div>
-              <label class="form-label" for="customFile"></label>
-              <input type="file" class="form-control" id="customFile" />  
-          </div>
+            <div class = "container">
+                <div class = "d-flex justify-content-center">
+                    <img style={{
+                      borderRadius:'50%',
+                      width:'300px',
+                      height:'300px',
+                      border: '2px solid black'
+                      }} src={Image} class="img-fluid d-flex justify-content-center" alt="..."/>
+                </div>
+                <label class="form-label" for="customFile"></label>
+                <input type="file" class="form-control" id="customFile" />  
+            </div>
           </div>
           <div className = "row">
               <div class = "container">
@@ -120,7 +147,11 @@ export const Edit = () => {
                   </div> 
               </div>
           </div>
-          <Tags/>
+          <div className = "row">
+            <div class = "container">
+              <Tags/>
+            </div>
+          </div>
       </div>
   </div>
 </div>
