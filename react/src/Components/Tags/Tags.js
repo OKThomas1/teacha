@@ -23,15 +23,23 @@ const Tags = () => {
       setTags([...tags, newTag])
     }, [tags])
 
-
     return (     
-    <ReactTags
-        ref={reactTags}
-        tags={tags}
-        suggestions={suggestions}
-        onDelete={onDelete}
-        onAddition={onAddition}
-      /> );
+      <div>
+        <ReactTags
+            ref={reactTags}
+            tags={tags}
+            suggestions={suggestions}
+            onDelete={onDelete}
+            onAddition={onAddition}
+            placeholderText = "Add tag"
+          /> 
+      <p style={{ margin: '0.5rem 0', color: 'gray' }}></p>
+
+          <p style={{ margin: '0.25rem 0', color: 'gray' }}>
+            <small><em>Tags must be 3–12 characters in length and only contain the letters A-Z</em></small>
+          </p>
+        </div>
+      );
 }
  
 export default Tags;
