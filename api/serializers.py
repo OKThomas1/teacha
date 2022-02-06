@@ -21,7 +21,8 @@ class PublicProfileSerializer(ModelSerializer):
 
 	class Meta:
 		model = Profile
-		fields = ('avatar', 'username', 'gender', 'age', 'race', 'first_name', 'last_name')
+		fields = ('avatar', 'username', 'gender', 'age', 'race', 'first_name', 'last_name', 'work', 'job_title', 'school', 'education_level', 'hometown')
+
 
 class MessageSerializer(ModelSerializer):
 
