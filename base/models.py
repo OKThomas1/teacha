@@ -14,6 +14,8 @@ class Profile(models.Model):
 	mentor = models.BooleanField(null=True, blank=True)
 	avatar = models.ImageField(default="default.jpg", upload_to="pfps")
 	visible = models.BooleanField(null=True, blank=True)
+	lat = models.DecimalField(max_digits=18, decimal_places=15, blank=True, null=True)
+	lng = models.DecimalField(max_digits=18, decimal_places=15, blank=True, null=True)
 
 
 class Swipe(models.Model):
