@@ -2,6 +2,7 @@ import {React, useState} from 'react';
 import BootstrapSwitchButton from 'bootstrap-switch-button-react';
 import Header from '../Header/Header';
 import Image from './circularme.jpg';
+import Tags from '../Tags/Tags';
 
 export const Edit = () => {
   const [isSwitchOn, setIsSwitchOn] = useState(false);
@@ -119,6 +120,7 @@ export const Edit = () => {
                   </div> 
               </div>
           </div>
+          <Tags/>
       </div>
   </div>
 </div>

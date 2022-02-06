@@ -6,18 +6,22 @@ from django.contrib.auth.models import User
 
 class PrivateProfileSerializer(ModelSerializer):
 	username = CharField(source="user.username")
+	first_name = CharField(source="user.first_name")
+	last_name = CharField(source="user.last_name")
 
 	class Meta:
 		model = Profile
-		fields = ('avatar', 'username')
+		fields = ('avatar', 'username', 'first_name', 'last_name')
 
 
 class PublicProfileSerializer(ModelSerializer):
 	username = CharField(source="user.username")
+	first_name = CharField(source="user.first_name")
+	last_name = CharField(source="user.last_name")
 
 	class Meta:
 		model = Profile
-		fields = ('avatar', 'username', 'gender', 'age', 'race')
+		fields = ('avatar', 'username', 'gender', 'age', 'race', 'first_name', 'last_name')
 
 class MessageSerializer(ModelSerializer):
 
