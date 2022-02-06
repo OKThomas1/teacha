@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'api',
     'base',
-    'react'
+    'react',
+    'channels'
 ]
 
 MIDDLEWARE = [
@@ -133,3 +134,13 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 LOGIN_REDIRECT_URL = "/home"
+
+ASGI_APPLICATION = "core.routing.application"
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": ["127.0.0.1"],
+        },
+    },
+}

@@ -19,12 +19,13 @@ class GetSelfView(APIView):
 
 
 def match_user_algorithm(user):
-	return Profile.objects.all().exclude(mentor=user.profile.mentor, user=user)
+	return Profile.objects.exclude(mentor=user.profile.mentor, user=user)
 
 
 class GetMatchingUsersView(APIView):
 	def get(self, request):
 		users = match_user_algorithm(request.user)
+		print(len(users))
 		if len(users) > 0:
 			serialized_users = []
 			for user in users:
@@ -32,7 +33,7 @@ class GetMatchingUsersView(APIView):
 					data = PrivateProfileSerializer(user).data
 					serialized_users.append(data)
 				else:
-					data = PublicProfileSerializer(user)
+					data = PublicProfileSerializer(user).data
 					serialized_users.append(data)
 			return Response(serialized_users, status=status.HTTP_200_OK)
 		else:
