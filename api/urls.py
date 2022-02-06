@@ -8,5 +8,6 @@ urlpatterns = [
 	path('swipe-left', views.SwipeLeftView.as_view()),
 	path('swipe-right', views.SwipeRightView.as_view()),
 	path('get-right-swipes', views.GetRightSwipesView.as_view()),
-	path('get-messages', views.GetMessagesView.as_view())
+	path('get-messages', views.GetMessagesView.as_view()),
+	path('get-matched-users', views.GetMatchedUsersView.as_view())
 ]
