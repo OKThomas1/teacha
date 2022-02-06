@@ -1,15 +1,27 @@
 import React from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
 const Chatbox = () => {
-    return <div class="card bg-light d-flex "
+    const sendMessage = (e) => {
+        e.preventDefault();
+
+
+    }
+    return <div className="card bg-light d-flex "
         style={{ height: "70%", width: "35%", position: "absolute", right: "30%", top: "10%", zIndex: "5", overflow: "auto" }}
         onClick={(e) => e.stopPropagation()}>
         <div class="card-header " style={{ backgroundColor: "#FFF4E0" }}>
             <h1>Name here</h1>
         </div>
-        <div class="card-body" style={{ backgroundColor: "#FFF4E0" }}>
+
+        <div className="card-body d-flex flex-column" style={{ backgroundColor: "#FFF4E0" }} >
+            <button className="btn btn-dark align-self-end"> test </button>
+            <button className="btn btn-dark align-self-start"> test </button>
 
         </div>
+
 
         <div class="card-footer" style={{ backgroundColor: "#FFF4E0" }}>
             <div class="input-group mb-3">
