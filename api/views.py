@@ -22,15 +22,15 @@ class GetSelfView(APIView):
 
 def match_user_algorithm(user, settings):
 	users = Profile.objects.exclude(mentor=user.profile.mentor, user=user)
-	if settings['min_age']:
+	if settings.get('min_age',None):
 		users = users.filter(age__gte=settings['min_age'])
-	if settings['max_age']:
+	if settings.get('max_age', None):
 		users = users.filter(age__lte=settings['max_age'])
-	if settings['race']:
+	if settings.get('race',None):
 		users = users.filter(race=settings['race'])
-	if settings['gender']:
+	if settings.get('gender',None):
 		users = users.filter(gender=settings['gender'])
-	if settings['radius']:
+	if settings.get('radius',None):
 		if user.profile.lat and user.profile.lng:
 			km = int(settings['radius'])
 			lat = km / 110.574
@@ -53,7 +53,7 @@ class GetMatchingUsersView(APIView):
 			if lat != request.user.profile.lat or lng != request.user.profile.lng:
 				request.user.profile.update(lat=lat, lng=lng)
 		
-		users = match_user_algorithm(request.user, request.data['args'])
+		users = match_user_algorithm(request.user, request.data.get("args", {}))
 		print(len(users))
 		if len(users) > 0:
 			serialized_users = []
@@ -184,7 +184,7 @@ class SendMessageView(APIView):
 
 
 def validate_profile_changes(changes):
-	valid_keys = ['work', 'job_title', 'school', 'education_level', 'hometown']
+	valid_keys = ['work', 'job_title', 'school', 'education_level', 'hometown', 'bio']
 	errors = []
 	for key, value in changes.items():
 		if key not in valid_keys:
