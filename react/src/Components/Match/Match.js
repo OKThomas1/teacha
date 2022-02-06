@@ -60,17 +60,21 @@ export const Match = ({ user }) => {
     const [userIndex, setUserIndex] = useState(0);
 
     useEffect(() => {
-        axios.get("/api/get-matching-users", { headers: { "X-CSRFTOKEN": Cookies.get("csrftoken") } })
-            .then(res => {
-                console.log(res.data)
-                setMatchedUsers(res.data);
-                setDisplayedUser(res.data[userIndex]);
-                setUserIndex(userIndex + 1);
-            }).catch(err => {
-                console.log(err)
-            })
-    }, [])
-
+        if (user && matchedUsers) {
+            axios.get("/api/get-matching-users", { headers: { "X-CSRFTOKEN": Cookies.get("csrftoken") } })
+                .then(res => {
+                    console.log(user);
+                    const result = res.data.filter((e) => {
+                        return (e.mentor != user.mentor)
+                    })
+                    setMatchedUsers(result);
+                    setDisplayedUser(result[userIndex]);
+                    setUserIndex(userIndex + 1);
+                }).catch(err => {
+                    console.log(err)
+                })
+        }
+    }, [user])
     const swipeRight = (e) => {
         e.preventDefault();
         const body = {
@@ -120,7 +124,7 @@ export const Match = ({ user }) => {
 
     return (
         <div className="vh-100 w-100 text-center d-flex justify-center" style={{ backgroundColor: "#FFF4E0" }} >
-            {messageModal ? (<MessageModal MessageModal={MessageModal} setMessageModal={setMessageModal} />) : " "}
+            {messageModal ? (<MessageModal user={user} MessageModal={MessageModal} setMessageModal={setMessageModal} />) : " "}
 
             <div className=" w-50 m-auto" style={{ height: "90%", borderRadius: "2rem", overflow: "hidden", backgroundColor: "#8ac6d1" }}>
                 <button style={messageButtonDiv} onClick={(e) => {

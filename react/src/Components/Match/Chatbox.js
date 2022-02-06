@@ -3,9 +3,29 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const Chatbox = ({ activeChat }) => {
+const Chatbox = ({ activeChat, user }) => {
 
-    const [messages, setMessages] = useState([]);
+    const [messages, setMessages] = useState([
+        {
+            sender: { username: "kouyingcheng" },
+            receiver: { username: "kouyingcheng4" },
+            message: "Hello nice to meet you!"
+        }, {
+            sender: { username: "kouyingcheng4" },
+            receiver: { username: "kouyingcheng" },
+            message: "Hey nice to meet you too!"
+        },
+        {
+            sender: { username: "kouyingcheng" },
+            receiver: { username: "kouyingcheng4" },
+            message: "I would love to hear about your experiences"
+        }, {
+            sender: { username: "kouyingcheng4" },
+            receiver: { username: "kouyingcheng" },
+            message: "Sure let's grab a coffee and talk!"
+        },
+
+    ]);
     const [input, setInput] = useState("");
 
     const sendMessage = (e) => {
@@ -23,19 +43,19 @@ const Chatbox = ({ activeChat }) => {
             .catch(err => console.log(err.response))
     }
 
-    useEffect(() => {
-        axios.get("/api/get-messages", { headers: { "X-CSRFTOKEN": Cookies.get("csrftoken") } })
-            .then(res => {
-                console.log(res.data);
-                // const result = res.data.filter((msg) => {
-                //     return msg.sender.username == activeChat.username || msg.receiver.username == activeChat.username
-                // })
-                setMessages(res.data)
-                console.log(activeChat.username)
-            }).catch(err => {
-                console.log(err)
-            })
-    }, [])
+    // useEffect(() => {
+    //     axios.get("/api/get-messages", { headers: { "X-CSRFTOKEN": Cookies.get("csrftoken") } })
+    //         .then(res => {
+    //             console.log(res.data);
+    //             // const result = res.data.filter((msg) => {
+    //             //     return msg.sender.username == activeChat.username || msg.receiver.username == activeChat.username
+    //             // })
+    //             setMessages(res.data)
+    //             console.log(activeChat.username)
+    //         }).catch(err => {
+    //             console.log(err.response)
+    //         })
+    // }, [])
 
     return <div className="card bg-light d-flex "
         style={{ height: "70%", width: "35%", position: "absolute", right: "30%", top: "10%", zIndex: "5", overflow: "auto" }}
@@ -46,7 +66,7 @@ const Chatbox = ({ activeChat }) => {
 
         <div className="card-body d-flex flex-column overflow-auto" style={{ backgroundColor: "#FFF4E0" }} >
             {messages?.map((message) => {
-                return (<button className={message.sender.username === activeChat.username ? "btn btn-info align-self-end" : "btn btn-secondary align-self-start"} onClick={(e) => {
+                return (<button className={message.sender.username === user.username ? "btn btn-info align-self-end my-2" : "btn btn-secondary align-self-start"} onClick={(e) => {
                     e.preventDefault();
                 }}>{message.message}</button>)
             })}
