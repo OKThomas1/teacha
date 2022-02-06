@@ -15,6 +15,18 @@ class Profile(models.Model):
 	avatar = models.ImageField(default="default.jpg", upload_to="pfps")
 	visible = models.BooleanField(null=True, blank=True)
 
+	lat = models.DecimalField(max_digits=18, decimal_places=15, blank=True, null=True)
+	lng = models.DecimalField(max_digits=18, decimal_places=15, blank=True, null=True)
+
+	work = models.CharField(max_length=50)
+	job_title = models.CharField(max_length=50)
+	school = models.CharField(max_length=50)
+	education_level = models.CharField(max_length=50)
+	hometown = models.CharField(max_length=50)
+
+	def __str__(self):
+		return self.user.username
+
 
 class Swipe(models.Model):
 	swiper = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="swiper")
@@ -27,3 +39,8 @@ class Message(models.Model):
 	receiver = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="receiver")
 	message = models.CharField(max_length=1000)
 	sent_at = models.DateTimeField(auto_now_add=True, blank=True)
+
+
+class Tag(models.Model):
+	tag = models.CharField(max_length=50)
+	user = models.ForeignKey(User, on_delete=models.CASCADE)

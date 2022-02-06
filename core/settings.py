@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'api',
     'base',
-    'react'
+    'react',
+    'channels'
 ]
 
 MIDDLEWARE = [
@@ -129,7 +130,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
+STATIC_URL = "/static/"
+
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
 
 LOGIN_REDIRECT_URL = "/home"
+
+ASGI_APPLICATION = "core.routing.application"
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer',
+    },
+}
