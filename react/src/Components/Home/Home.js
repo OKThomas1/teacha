@@ -5,6 +5,7 @@ import { MdSwipe} from 'react-icons/md'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { motion } from 'framer-motion'
 
 
 export const Home = () => {
@@ -71,27 +72,33 @@ export const Home = () => {
       />
       <h1>{name}</h1>
       <div className="container d-flex flex-row w-50 justify-content-center">
-        <button 
-          className='btn m-2' 
-          style={buttonStyle}
-          onClick = {() => navigate('/settings')}
-        >
-          <BsGearFill style={iconStyle}/>
-        </button>
-        <button 
-          className='btn m-2'
-          style={buttonStyle}
-          onClick = {() => navigate('/edit')}
-        >
-          <BsFillPencilFill style={iconStyle}/>
-        </button>
-        <button 
-          className='btn m-2' 
-          style={buttonStyle}
-          onClick={() => navigate('/match')}
-        >
-          <MdSwipe style={iconStyle}/>
-        </button>
+        <motion.div className="" whileHover={{scale:1.1}}>
+          <button 
+            className='btn m-2' 
+            style={buttonStyle}
+            onClick = {() => navigate('/settings')}
+          >
+            <BsGearFill style={iconStyle}/>
+          </button>
+        </motion.div>
+        <motion.div className="" whileHover={{scale:1.1}}>
+          <button 
+            className='btn m-2'
+            style={buttonStyle}
+            onClick = {() => navigate('/edit')}
+          >
+            <BsFillPencilFill style={iconStyle}/>
+          </button>
+        </motion.div>
+        <motion.div className="" whileHover={{scale:1.1}}>
+          <button 
+            className='btn m-2' 
+            style={buttonStyle}
+            onClick={() => navigate('/match')}
+          >
+            <MdSwipe style={iconStyle}/>
+          </button>
+        </motion.div>
       </div>
     </div>
   )
