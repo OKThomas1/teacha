@@ -40,7 +40,6 @@ class GetMatchingUsersView(APIView):
         else:
             return Response({"error": "could not get users with algorithm"}, status=status.HTTP_400_BAD_REQUEST)
 
-
 class GetUserByUsernameView(APIView):
     def get(self, request):
         username = request.headers['username']
