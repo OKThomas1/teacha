@@ -17,6 +17,9 @@ class Profile(models.Model):
 	lat = models.DecimalField(max_digits=18, decimal_places=15, blank=True, null=True)
 	lng = models.DecimalField(max_digits=18, decimal_places=15, blank=True, null=True)
 
+	def __str__(self):
+		return self.user.username
+
 
 class Swipe(models.Model):
 	swiper = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="swiper")

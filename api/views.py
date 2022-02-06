@@ -25,11 +25,11 @@ def match_user_algorithm(user):
 class GetMatchingUsersView(APIView):
 	def get(self, request):
 		ip = request.META.get('REMOTE_ADDR', None)
-		if ip:
+		if ip and ip != "127.0.0.1":
 			res = requests.get(f"https://geolocation-db.com/json/{ip}&position=true").json()
 			lat = res['latitude']
 			lng = res['longitude']
-			if lat != request.user.profilte.lat or lng != request.user.profile.lng:
+			if lat != request.user.profile.lat or lng != request.user.profile.lng:
 				request.user.profile.update(lat=lat, lng=lng)
 		
 		users = match_user_algorithm(request.user)
@@ -128,7 +128,6 @@ class GetMatchedUsersView(APIView):
 
 
 
-
 class GetMessagesView(generics.ListAPIView):
 	serializer_class = MessageSerializer
 
@@ -152,6 +151,10 @@ class SendMessageView(APIView):
 
 		else: 
 			return Response({"error": "could not find user with the provided username"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+def validate_profile_changes(changes):
+	return []
 
 
 class UpdateProfileView(APIView):
