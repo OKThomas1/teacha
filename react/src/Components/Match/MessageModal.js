@@ -44,7 +44,6 @@ const MessageModal = ({ MessageModal, setMessageModal }) => {
                         {matchedUsers.map(match => {
                             return (
                                 <li class="list-group-item" style={convoStyle} onClick={(e) => {
-                                    console.log(match)
                                     setActiveChat(match);
                                 }}>
                                     <p class="font-weight-bold">Name:</p>

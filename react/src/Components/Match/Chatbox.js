@@ -31,7 +31,7 @@ const Chatbox = ({ activeChat }) => {
             <h1>Name here</h1>
         </div>
 
-        <div className="card-body d-flex flex-column" style={{ backgroundColor: "#FFF4E0" }} >
+        <div className="card-body d-flex flex-column overflow-hidden" style={{ backgroundColor: "#FFF4E0" }} >
             {messages?.map((message) => {
                 <button className={message?.sender == activeChat?.username ? "btn btn-secondary align-self-start" : "btn btn-info align-self-end"} onClick={(e) => {
                     e.preventDefault();
