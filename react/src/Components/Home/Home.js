@@ -5,7 +5,7 @@ import Cookies from "js-cookie"
 export const Home = () => {
   useEffect(() => {
     axios
-      .get("/api/get-user", {headers: {"X-CSRFTOKEN": Cookies.get("csrftoken"), username: "tb"}})
+      .get("/api/get-right-swipes", {headers: {"X-CSRFTOKEN": Cookies.get("csrftoken")}})
       .then(res => {
         console.log(res.data)
       })
