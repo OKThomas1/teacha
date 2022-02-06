@@ -1,20 +1,20 @@
 version: "3.1"
 services:
   django:
-    build: ./core
-    container_name: django
+    build: ./
+    container_name: django-teacha
     restart: always
     ports:
       - 8000:8000
     volumes:
-      - ./core:/app/django
+      - ./:/app/django
     networks:
       - django-network
     command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 
   react:
     build: ./react
-    container_name: react
+    container_name: react-techa
     restart: always
     volumes:
       - ./react:/app/react
