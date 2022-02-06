@@ -12,12 +12,15 @@ import math
 
 
 class GetSelfView(APIView):
-    def get(self, request):
-        if not request.user.is_authenticated:
-            return Response({"error": "you are not authenticated"}, status=status.HTTP_400_BAD_REQUEST)
-        profile = request.user.profile
-        data = PublicProfileSerializer(profile).data
-        return Response(data, status=status.HTTP_200_OK)
+	def get(self, request):
+		if not request.user.is_authenticated:
+			return Response({"error": "you are not authenticated"}, status=status.HTTP_400_BAD_REQUEST)
+		try:
+			profile = request.user.profile
+			data = PublicProfileSerializer(profile).data
+			return Response(data, status=status.HTTP_200_OK)
+		except:
+			return Response({"error": "error getting profile"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 def match_user_algorithm(user, settings):
@@ -189,7 +192,10 @@ def validate_profile_changes(changes):
 	for key, value in changes.items():
 		if key not in valid_keys:
 			errors.append(f'{key} is not a valid key')
-		if len(str(value)) > 50:
+		if key == "bio":
+			if len(str(value)) > 1000:
+				errors.append("bio is too long")
+		elif len(str(value)) > 50:
 			errors.append(f'{key} value is too long')
 		changes[key] = str(value)
 	return errors
