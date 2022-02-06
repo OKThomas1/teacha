@@ -10,6 +10,7 @@ import MessageModal from './MessageModal';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import UserModal from './UserModal'
 
 
 export const Match = () => {
@@ -55,6 +56,7 @@ export const Match = () => {
 
 
     const [messageModal, setMessageModal] = useState(false);
+    const [userModal, setUserModal] = useState(false);
     const [matchedUsers, setMatchedUsers] = useState([]);
     const [displayedUser, setDisplayedUser] = useState({});
     const [userIndex, setUserIndex] = useState(0);
@@ -122,6 +124,8 @@ export const Match = () => {
         <div className="vh-100 w-100 text-center d-flex justify-center" style={{ backgroundColor: "#FFF4E0" }} >
             {messageModal ? (<MessageModal MessageModal={MessageModal} setMessageModal={setMessageModal} />) : " "}
 
+            {userModal ? (<UserModal UserModal={UserModal} setUserModal={setUserModal}/>) :""}
+
             <div className=" w-50 m-auto" style={{ height: "90%", borderRadius: "2rem", overflow: "hidden", backgroundColor: "#8ac6d1" }}>
                 <button style={messageButtonDiv} onClick={(e) => {
                     e.preventDefault();
@@ -139,7 +143,9 @@ export const Match = () => {
 
 
                 {matchedUsers.length > userIndex - 1 ? (
-                    <div>
+                    <div onClick={(e) => {
+                        setUserModal(true);
+                    }}>
                         <div className="imageDiv" style={{ height: "60%", backgroundColor: "white", overflow: "hidden" }}>
                             <img src={displayedUser?.avatar} style={image} />
                         </div>
