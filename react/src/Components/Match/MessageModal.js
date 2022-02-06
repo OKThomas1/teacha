@@ -54,14 +54,8 @@ const MessageModal = ({ MessageModal, setMessageModal }) => {
                     </ul>
                 </div>
             </div>
-
-
             {activeChat ? (
                 <Chatbox activeChat={activeChat} />) : ""}
-
-
-
-
 
         </div>
     )

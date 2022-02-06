@@ -59,7 +59,6 @@ export const Match = () => {
     const [displayedUser, setDisplayedUser] = useState({});
     const [userIndex, setUserIndex] = useState(0);
 
-
     useEffect(() => {
         axios.get("/api/get-matching-users", { headers: { "X-CSRFTOKEN": Cookies.get("csrftoken") } })
             .then(res => {

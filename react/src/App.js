@@ -6,11 +6,11 @@ import { Match } from "./Components/Match/Match"
 import Header from "./Components/Header/Header"
 
 function App() {
-  
+
   return (
     <div className="App">
       <BrowserRouter>
-        <Header/>
+        <Header />
         <Routes>
           <Route path="/home" element={<Home />} />
           <Route path="/edit" element={<Edit />} />

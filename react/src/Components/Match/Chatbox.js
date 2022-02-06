@@ -4,14 +4,14 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 const Chatbox = ({ activeChat }) => {
-    const [messages, setMessages] = useState(['test,', 'test', 'test', 'test']);
+
+    const [messages, setMessages] = useState([]);
+
     const sendMessage = (e) => {
         e.preventDefault();
     }
 
     useEffect(() => {
-        const unique = new Set();
-        const users = [];
         axios.get("/api/get-messages", { headers: { "X-CSRFTOKEN": Cookies.get("csrftoken") } })
             .then(res => {
                 console.log(res.data);
@@ -19,6 +19,7 @@ const Chatbox = ({ activeChat }) => {
                     return msg.sender == activeChat.username || msg.receiver == activeChat.username
                 })
                 setMessages(result);
+
             }).catch(err => {
                 console.log(err)
             })
