@@ -12,13 +12,12 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 
-
 export const Match = () => {
     const image = {
-        width: "100%", // note to change picture height based on display size, implement if time allows
+        width: "60%", // note to change picture height based on display size, implement if time allows
         objectFit: "cover",
         overflow: "hidden",
-        maxHeight: "30rem"
+        height: "33rem"
     }
 
     const matchButton = {
@@ -56,19 +55,69 @@ export const Match = () => {
 
 
     const [messageModal, setMessageModal] = useState(false);
-    const [matchedUser, setMatchedUser] = useState({});
+    const [matchedUsers, setMatchedUsers] = useState([]);
+    const [displayedUser, setDisplayedUser] = useState({});
+    const [userIndex, setUserIndex] = useState(0);
+
+
     useEffect(() => {
         axios.get("/api/get-matching-users", { headers: { "X-CSRFTOKEN": Cookies.get("csrftoken") } })
             .then(res => {
-                alert(res.data.length)
-                console.log(res.data);
-                alert("api call made")
-
+                setMatchedUsers(res.data);
+                setDisplayedUser(res.data[userIndex]);
+                setUserIndex(userIndex + 1);
             }).catch(err => {
-                alert(err.stack)
                 console.log(err.stack())
             })
     }, [])
+
+    const swipeRight = (e) => {
+        e.preventDefault();
+        const body = {
+            "username": displayedUser?.username
+        }
+        axios({
+            method: "POST", url: "api/swipe-right",
+            data: {
+                username: displayedUser?.username
+            },
+            headers: {
+                "X-CSRFTOKEN": Cookies.get("csrftoken")
+            }
+        }).then(res => {
+            console.log(res);
+            setDisplayedUser(matchedUsers[userIndex]);
+            setUserIndex(userIndex + 1);
+        }).catch(err => {
+            setDisplayedUser(matchedUsers[userIndex]);
+            setUserIndex(userIndex + 1);
+            console.log(err.response);
+        })
+    }
+
+    const swipeLeft = (e) => {
+        e.preventDefault();
+        const body = {
+            "username": displayedUser?.username
+        }
+        axios({
+            method: "POST", url: "api/swipe-right",
+            data: {
+                username: displayedUser?.username
+            },
+            headers: {
+                "X-CSRFTOKEN": Cookies.get("csrftoken")
+            }
+        }).then(res => {
+            console.log(res);
+            setDisplayedUser(matchedUsers[userIndex]);
+            setUserIndex(userIndex + 1);
+        }).catch(err => {
+            setDisplayedUser(matchedUsers[userIndex]);
+            setUserIndex(userIndex + 1);
+            console.log(err.response);
+        })
+    }
 
     return (
         <div className="vh-100 w-100 text-center d-flex justify-center" style={{ backgroundColor: "#FFF4E0" }} >
@@ -91,52 +140,62 @@ export const Match = () => {
                 </button>
 
 
+                {matchedUsers.length > userIndex - 1 ? (
+                    <div>
+                        <div className="imageDiv" style={{ height: "60%", backgroundColor: "white", overflow: "hidden" }}>
+                            <img src={window.location.origin + displayedUser?.avatar} style={image} />
+                        </div>
+                        <div className="lowerPanel d-flex flex-column justify-content-around mx-5 my-3">
+                            <div className="intro text-left" >
+                                <h1>{displayedUser?.first_name} {displayedUser?.last_name}</h1>
+                                <p className="introText overflow-hidden" style={{ maxHeight: 110, height: 110 }}>
+                                    <p className="font-weight-bold">Description: </p>
+                                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum
+                                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum
+                                </p>
+                            </div>
 
-                <div className="">
-                    <img src="https://ggsc.s3.amazonaws.com/images/uploads/The_Science-Backed_Benefits_of_Being_a_Dog_Owner.jpg" style={image} />
-                </div>
-                <div className="lowerPanel d-flex flex-column justify-content-around mx-5 my-3">
-                    <div className="intro text-left" >
-                        <h1>Emily</h1>
-                        <p className="introText overflow-hidden" style={{ maxHeight: 110, height: 110 }}>
-                            <p className="font-weight-bold">Description: </p>
-                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum
-                            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum
-                        </p>
+                            <div className="buttons d-flex justify-content-around mt-2">
+                                <div class="buttonDiv d-flex flex-column text-center" >
+                                    <button class="btn btn-light" style={matchButton}>
+                                        < BsFillSkipBackwardCircleFill style={{ width: "100%", fontSize: "40px", color: "blue" }} />
+                                    </button>
 
+                                </div>
+                                <div class="buttonDiv d-flex flex-column" >
+                                    <button class="btn btn-light" style={matchButton} onClick={swipeLeft}>
+                                        <MdCancel style={{ width: "100%", fontSize: "40px", color: "red" }} />
+                                    </button>
+
+                                </div>
+                                <div class="buttonDiv d-flex flex-column text-center" >
+                                    <button class="btn btn-light" style={matchButton} onClick={swipeRight}>
+                                        <IoCheckmarkCircleSharp style={{ width: "100%", fontSize: "40px", color: "green" }} />
+                                    </button>
+
+                                </div>
+                                <div class="buttonDiv d-flex flex-column text-center pb-2" >
+                                    <button class="btn btn-light " style={matchButton}>
+                                        <AiFillStar style={{ width: "100%", fontSize: "40px", color: "orange" }} /> </button>
+
+                                </div>
+
+                            </div>
+
+                        </div>
                     </div>
-
-                    <div className="buttons d-flex justify-content-around mt-2">
-                        <div class="buttonDiv d-flex flex-column text-center" >
-                            <button class="btn btn-light" style={matchButton}>
-                                < BsFillSkipBackwardCircleFill style={{ width: "100%", fontSize: "40px", color: "blue" }} />
-                            </button>
-
-                        </div>
-                        <div class="buttonDiv d-flex flex-column" >
-                            <button class="btn btn-light" style={matchButton}>
-                                <MdCancel style={{ width: "100%", fontSize: "40px", color: "red" }} />
-                            </button>
-
-                        </div>
-                        <div class="buttonDiv d-flex flex-column text-center" >
-                            <button class="btn btn-light" style={matchButton}>
-                                <IoCheckmarkCircleSharp style={{ width: "100%", fontSize: "40px", color: "green" }} />
-                            </button>
-
-                        </div>
-                        <div class="buttonDiv d-flex flex-column text-center pb-2" >
-                            <button class="btn btn-light " style={matchButton}>
-                                <AiFillStar style={{ width: "100%", fontSize: "40px", color: "orange" }} /> </button>
-
-                        </div>
-
+                ) : (
+                    <div>
+                        <h1>
+                            No more matches....
+                        </h1>
                     </div>
+                )}
 
-                </div>
 
 
             </div>
+
         </div >
 
     )
