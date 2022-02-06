@@ -1,3 +1,4 @@
+import profile
 from django.db.models import Q
 from rest_framework import status, generics
 from rest_framework.views import APIView
@@ -10,17 +11,13 @@ from base.models import Swipe, Profile, Message
 
 class GetSelfView(APIView):
 	def get(self, request):
-		profile = Profile.objects.get(user=request.user)
-		data = PublicProfileSerializer(profile)
-		if data.is_valid():
-			return Response(data.data, status=status.HTTP_200_OK)
-		else:
-			return Response({"error": "invalid"}, status=status.HTTP_400_BAD_REQUEST)
+		profile = request.user.profile 
+		data = PublicProfileSerializer(profile).data
+		return Response(data, status=status.HTTP_200_OK)
 
 
 def match_user_algorithm(user):
-	profile = Profile.objects.get(user=user)
-	return Profile.objects.all().exclude(mentor=profile.mentor)
+	return Profile.objects.all().exclude(mentor=user.profile.mentor, user=user)
 
 
 class GetMatchingUsersView(APIView):
@@ -30,41 +27,33 @@ class GetMatchingUsersView(APIView):
 			serialized_users = []
 			for user in users:
 				if user.visible:
-					data = PrivateProfileSerializer(user)
-					if data.is_valid():
-						serialized_users.append(data.data)
+					data = PrivateProfileSerializer(user).data
+					serialized_users.append(data)
 				else:
 					data = PublicProfileSerializer(user)
-					if data.is_valid():
-						serialized_users.append(data.data)
+					serialized_users.append(data)
 			return Response(serialized_users, status=status.HTTP_200_OK)
 		else:
 			return Response({"error": "could not get users with algorithm"}, status=status.HTTP_400_BAD_REQUEST)
 
 class GetUserByUsernameView(APIView):
 	def get(self, request):
-		username = request.data['username']
+		username = request.headers['username']
 		users = User.objects.filter(username=username)
 		if len(users) > 0:
-			user = User.objects.get(user=users[0])
+			user = users[0].profile
 			if user.visible:
-				data = PublicProfileSerializer(user)
-				if data.is_valid():
-					return Response(data.data, status=status.HTTP_200_OK)
-				else:
-					return Response({"error": "public profile is invalid"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+				data = PublicProfileSerializer(user).data
+				return Response(data, status=status.HTTP_200_OK)
 			else:
-				data = PrivateProfileSerializer(user)
-				if data.is_valid():
-					return Response(data.data, status=status.HTTP_200_OK)
-				else:
-					return Response({"error": "private profile is invalid"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+				data = PrivateProfileSerializer(user).data
+				return Response(data, status=status.HTTP_200_OK)
 		else:
 			return Response({"error": "could not find user with provided username"}, status=status.HTTP_404_NOT_FOUND)
 
 class SwipeLeftView(APIView):
 	def post(self, request):
-		swiper = Profile.objects.get(user=request.user)
+		swiper = request.user.profile
 		swiped = Profile.objects.filter(user__username=request.data['username'])
 		if len(swiped > 0):
 			swiped = swiped[0]
@@ -77,7 +66,7 @@ class SwipeLeftView(APIView):
 
 class SwipeRightView(APIView):
 	def post(self, request):
-		swiper = Profile.objects.get(user=request.user)
+		swiper = request.user.profile
 		swiped = Profile.objects.filter(user__username=request.data['username'])
 		if len(swiped > 0):
 			swiped = swiped[0]
@@ -91,7 +80,7 @@ class SwipeRightView(APIView):
 
 class GetRightSwipesView(APIView):
 	def get(self, request):
-		swipes = Swipe.objects.filter(swiped__user=request.user, swipe_type="right")
+		swipes = Swipe.objects.filter(swiped=request.user.profile, swipe_type="right")
 		if len(swipes) > 0:
 			serialized_users = []
 			for swipe in swipes:
@@ -112,7 +101,7 @@ class GetMessages(generics.ListAPIView):
 	serializer = MessageSerializer
 
 	def get_queryset(self):
-		user = Profile.objects.get(user=self.request.user)
-		return Message.objects.filter(Q(sender=user) | Q(receiver=user))
+		profile = self.request.user.profile
+		return Message.objects.filter(Q(sender=profile) | Q(receiver=profile))
 
 
