@@ -19,10 +19,9 @@ const MessageModal = ({ MessageModal, setMessageModal }) => {
     const [matchedUsers, setMatchedUsers] = useState([]);
 
     useEffect(() => {
-        const unique = new Set();
-        const users = [];
         axios.get("/api/get-matched-users", { headers: { "X-CSRFTOKEN": Cookies.get("csrftoken") } })
             .then(res => {
+                console.log(res.data)
                 setMatchedUsers(res.data);
             }).catch(err => {
                 console.log(err)
@@ -43,21 +42,25 @@ const MessageModal = ({ MessageModal, setMessageModal }) => {
 
                         {matchedUsers.map(match => {
                             return (
-                                <li class="list-group-item" style={convoStyle} onClick={(e) => {
+                                <button onClick={(e) => {
+                                    console.log(match);
                                     setActiveChat(match);
                                 }}>
-                                    <p class="font-weight-bold">Name:</p>
-                                    <p>Previous message:</p>
-                                </li>
+                                    <li class="list-group-item" style={convoStyle} >
+                                        <p class="font-weight-bold">{match.first_name} {match.last_name}</p>
+                                    </li>
+                                </button>
                             )
                         })}
                     </ul>
                 </div>
             </div>
-            {activeChat ? (
-                <Chatbox activeChat={activeChat} />) : ""}
+            {
+                activeChat ? (
+                    <Chatbox activeChat={activeChat} />) : ""
+            }
 
-        </div>
+        </div >
     )
         ;
 };

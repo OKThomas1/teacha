@@ -12,7 +12,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 
-export const Match = () => {
+export const Match = ({ user }) => {
     const image = {
         width: "60%", // note to change picture height based on display size, implement if time allows
         objectFit: "cover",
@@ -62,11 +62,12 @@ export const Match = () => {
     useEffect(() => {
         axios.get("/api/get-matching-users", { headers: { "X-CSRFTOKEN": Cookies.get("csrftoken") } })
             .then(res => {
+                console.log(res.data)
                 setMatchedUsers(res.data);
                 setDisplayedUser(res.data[userIndex]);
                 setUserIndex(userIndex + 1);
             }).catch(err => {
-                console.log(err.stack())
+                console.log(err)
             })
     }, [])
 
@@ -84,7 +85,6 @@ export const Match = () => {
                 "X-CSRFTOKEN": Cookies.get("csrftoken")
             }
         }).then(res => {
-            console.log(res);
             setDisplayedUser(matchedUsers[userIndex]);
             setUserIndex(userIndex + 1);
         }).catch(err => {
@@ -93,6 +93,7 @@ export const Match = () => {
             console.log(err.response);
         })
     }
+
 
     const swipeLeft = (e) => {
         e.preventDefault();
@@ -108,7 +109,6 @@ export const Match = () => {
                 "X-CSRFTOKEN": Cookies.get("csrftoken")
             }
         }).then(res => {
-            console.log(res);
             setDisplayedUser(matchedUsers[userIndex]);
             setUserIndex(userIndex + 1);
         }).catch(err => {
