@@ -6,9 +6,20 @@ import Cookies from 'js-cookie';
 const Chatbox = ({ activeChat }) => {
 
     const [messages, setMessages] = useState([]);
+    const [input, setInput] = useState("");
 
     const sendMessage = (e) => {
-        e.preventDefault();
+        e.preventDefault()
+        axios({
+            method: "POST", url: "api/send-message",
+            data: {
+                username: activeChat.username,
+                message: input
+            },
+            headers: {
+                "X-CSRFTOKEN": Cookies.get("csrftoken")
+            }
+        })
     }
 
     useEffect(() => {
@@ -19,7 +30,6 @@ const Chatbox = ({ activeChat }) => {
                     return msg.sender == activeChat.username || msg.receiver == activeChat.username
                 })
                 setMessages(result);
-
             }).catch(err => {
                 console.log(err)
             })
@@ -43,9 +53,12 @@ const Chatbox = ({ activeChat }) => {
 
         <div class="card-footer" style={{ backgroundColor: "#FFF4E0" }}>
             <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="Enter a message..." />
+                <input type="text" class="form-control" placeholder="Enter a message..." value={input}
+                    onChange={(e) => {
+                        setInput(e.target.value)
+                    }} />
                 <div class="input-group-append">
-                    <button class="btn btn-info text-black" type="button">Send</button>
+                    <button class="btn btn-info text-black" type="button" onClick={sendMessage}>Send</button>
                 </div>
             </div>
         </div>
