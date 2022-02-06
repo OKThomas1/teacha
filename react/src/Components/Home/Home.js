@@ -65,7 +65,7 @@ export const Home = () => {
   return (
     <div className='container d-flex flex-column w-100 vh-100 justify-content-center align-items-center' style={{background: "#FFF4E0"}}>
       <img 
-        src={window.location.origin + prof} 
+        src={prof} 
         alt=""
         style={imageStyle}
       />
