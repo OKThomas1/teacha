@@ -8,13 +8,17 @@ import { BiMessageDetail, BiNoEntry } from 'react-icons/bi';
 import { BsFillSkipBackwardCircleFill } from 'react-icons/bs';
 import MessageModal from './MessageModal';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
+import Cookies from 'js-cookie';
+
+
 
 export const Match = () => {
     const image = {
         width: "100%", // note to change picture height based on display size, implement if time allows
         objectFit: "cover",
         overflow: "hidden",
-        maxHeight: "40rem"
+        maxHeight: "30rem"
     }
 
     const matchButton = {
@@ -39,7 +43,7 @@ export const Match = () => {
         backgroundColor: "none",
         border: "none",
         position: "absolute",
-        left: "23%",
+        left: "20%",
         top: "1%",
         fontSize: "60px",
 
@@ -52,14 +56,25 @@ export const Match = () => {
 
 
     const [messageModal, setMessageModal] = useState(false);
+    const [matchedUser, setMatchedUser] = useState({});
+    useEffect(() => {
+        axios.get("/api/get-matching-users", { headers: { "X-CSRFTOKEN": Cookies.get("csrftoken") } })
+            .then(res => {
+                alert(res.data.length)
+                console.log(res.data);
+                alert("api call made")
+
+            }).catch(err => {
+                alert(err.stack)
+                console.log(err.stack())
+            })
+    }, [])
 
     return (
         <div className="vh-100 w-100 text-center d-flex justify-center" style={{ backgroundColor: "#FFF4E0" }} >
             {messageModal ? (<MessageModal MessageModal={MessageModal} setMessageModal={setMessageModal} />) : " "}
 
-
-
-            <div className=" w-75 m-auto" style={{ height: "90%", borderRadius: "2rem", overflow: "hidden", backgroundColor: "#8ac6d1" }}>
+            <div className=" w-50 m-auto" style={{ height: "90%", borderRadius: "2rem", overflow: "hidden", backgroundColor: "#8ac6d1" }}>
 
                 <button style={messageButtonDiv} onClick={(e) => {
                     e.preventDefault();
