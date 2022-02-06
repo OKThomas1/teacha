@@ -1,5 +1,9 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
+import Cookies from 'js-cookie';
+import Chatbox from './Chatbox';
+
 const MessageModal = ({ MessageModal, setMessageModal }) => {
     const convoStyle = {
         height: "100px",
@@ -9,7 +13,27 @@ const MessageModal = ({ MessageModal, setMessageModal }) => {
         border: "solid gray 1px"
     }
 
+    const [messages, setMessages] = useState([]);
     const [activeChat, setActiveChat] = useState(false);
+    const [chats, setChats] = useState(false);
+    const [matchedUsers, setMatchedUsers] = useState(['1', '2', '3']);
+
+    useEffect(() => {
+        const unique = new Set();
+        const users = [];
+
+        // this will be changed to get matched users
+        axios.get("/api/get-messages", { headers: { "X-CSRFTOKEN": Cookies.get("csrftoken") } })
+            .then(res => {
+                console.log(res.data);
+
+            }).catch(err => {
+                alert(err.stack)
+                console.log(err.stack())
+            })
+
+    }, [])
+
     return (
         <div class="vh-100 w-100" style={{ position: "absolute", backgroundColor: "rgba(0, 0, 0, 0.4)", zIndex: "4" }} onClick={(e) => {
             e.preventDefault();
@@ -21,38 +45,27 @@ const MessageModal = ({ MessageModal, setMessageModal }) => {
                 </div>
                 <div class="card-body " style={{ backgroundColor: "#FFF4E0", padding: "0" }}>
                     <ul class="list-group list-group-flush" >
-                        <li class="list-group-item" style={convoStyle} onClick={(e) => {
-                            setActiveChat(true);
-                        }}>
-                            <p class="font-weight-bold">Name:</p>
-                            <p>Previous message:</p>
-                        </li>
+
+                        {matchedUsers.map(match => {
+                            return (
+                                <li class="list-group-item" style={convoStyle} onClick={(e) => {
+                                    setActiveChat(true);
+                                }}>
+                                    <p class="font-weight-bold">Name:</p>
+                                    <p>Previous message:</p>
+                                </li>
+                            )
+                        })}
 
                     </ul>
+
+
                 </div>
             </div>
 
 
             {activeChat ? (
-                <div class="card bg-light d-flex " style={{ height: "70%", width: "35%", position: "absolute", right: "45%", top: "10%", zIndex: "5", overflow: "auto" }} onClick={(e) => e.stopPropagation()}>
-                    <div class="card-header " style={{ backgroundColor: "#FFF4E0" }}>
-                        <h1>Name here</h1>
-                    </div>
-                    <div class="card-body" style={{ backgroundColor: "#FFF4E0" }}>
-
-                    </div>
-
-                    <div class="card-footer" style={{ backgroundColor: "#FFF4E0" }}>
-                        <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="Enter a message..." />
-                            <div class="input-group-append">
-                                <button class="btn btn-info text-black" type="button">Send</button>
-                            </div>
-                        </div>
-
-
-                    </div>
-                </div>) : ""}
+                <Chatbox />) : ""}
 
 
 
