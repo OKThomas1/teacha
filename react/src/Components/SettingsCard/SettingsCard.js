@@ -4,7 +4,6 @@ import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
 
 
-
 export const SettingsCard = () => {
 
     const [age, setAge] = useState([0, 100])
