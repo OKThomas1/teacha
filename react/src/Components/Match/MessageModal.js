@@ -4,7 +4,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import Chatbox from './Chatbox';
 
-const MessageModal = ({ MessageModal, setMessageModal }) => {
+const MessageModal = ({ MessageModal, setMessageModal, user }) => {
     const convoStyle = {
         height: "100px",
         overflow: "hidden",
@@ -19,11 +19,16 @@ const MessageModal = ({ MessageModal, setMessageModal }) => {
     const [matchedUsers, setMatchedUsers] = useState([]);
 
     useEffect(() => {
-        const unique = new Set();
-        const users = [];
         axios.get("/api/get-matched-users", { headers: { "X-CSRFTOKEN": Cookies.get("csrftoken") } })
             .then(res => {
-                setMatchedUsers(res.data);
+                console.log(res.data)
+                const unique = new Set();
+                const result = res.data.filter(match => {
+                    const check = unique.has(match.username);
+                    unique.add(match.username);
+                    return !check;
+                })
+                setMatchedUsers(result);
             }).catch(err => {
                 console.log(err)
             })
@@ -43,21 +48,25 @@ const MessageModal = ({ MessageModal, setMessageModal }) => {
 
                         {matchedUsers.map(match => {
                             return (
-                                <li class="list-group-item" style={convoStyle} onClick={(e) => {
+                                <button onClick={(e) => {
+                                    console.log(match);
                                     setActiveChat(match);
                                 }}>
-                                    <p class="font-weight-bold">Name:</p>
-                                    <p>Previous message:</p>
-                                </li>
+                                    <li class="list-group-item" style={convoStyle} >
+                                        <p class="font-weight-bold">{match.first_name} {match.last_name}</p>
+                                    </li>
+                                </button>
                             )
                         })}
                     </ul>
                 </div>
             </div>
-            {activeChat ? (
-                <Chatbox activeChat={activeChat} />) : ""}
+            {
+                activeChat ? (
+                    <Chatbox activeChat={activeChat} user={user} />) : ""
+            }
 
-        </div>
+        </div >
     )
         ;
 };

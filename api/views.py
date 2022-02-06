@@ -1,4 +1,5 @@
 from django.db.models import Q
+from rest_framework.parsers import FileUploadParser
 from rest_framework import status, generics
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -8,6 +9,8 @@ from base.models import Swipe, Profile, Message
 import requests
 import math
 from rest_framework.parsers import FileUploadParser
+
+
 # Create your views here.
 
 
@@ -57,7 +60,6 @@ class GetMatchingUsersView(APIView):
 				request.user.profile.update(lat=lat, lng=lng)
 		
 		users = match_user_algorithm(request.user, request.data.get("args", {}))
-		print(len(users))
 		if len(users) > 0:
 			serialized_users = []
 			for user in users:
@@ -187,7 +189,7 @@ class SendMessageView(APIView):
 
 
 def validate_profile_changes(changes):
-	valid_keys = ['work', 'job_title', 'school', 'education_level', 'hometown', 'bio']
+	valid_keys = ['work', 'job_title', 'school', 'education_level', 'hometown', 'bio', 'visible']
 	errors = []
 	for key, value in changes.items():
 		if key not in valid_keys:
@@ -195,15 +197,23 @@ def validate_profile_changes(changes):
 		if key == "bio":
 			if len(str(value)) > 1000:
 				errors.append("bio is too long")
+				changes[key] = str(value)
+
+		elif key == "visible":
+			print(changes['visible'])
+			changes['visible'] = bool(value)	
 		elif len(str(value)) > 50:
 			errors.append(f'{key} value is too long')
-		changes[key] = str(value)
+			changes[key] = str(value)
 	return errors
 
 
 class UpdateProfileView(APIView):
+
+
 	def put(self, request):
 		changes = request.data['changes']
+
 		errors = validate_profile_changes(changes)
 		if len(errors) > 0:
 			return Response(errors, status=status.HTTP_400_BAD_REQUEST)

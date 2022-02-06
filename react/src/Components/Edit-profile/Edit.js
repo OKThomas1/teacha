@@ -1,11 +1,13 @@
 import {React, useEffect, useState} from "react"
 import BootstrapSwitchButton from "bootstrap-switch-button-react"
 import Header from "../Header/Header"
-import Image from "./circularme.jpg"
 import Tags from "../Tags/Tags"
+import axios from "axios"
+import Cookies from "js-cookie"
 
 export const Edit = props => {
-  const [isSwitchOn, setIsSwitchOn] = useState(null)
+  const [isSwitchOn, setIsSwitchOn] = useState(false)
+  const [pfp, setPfp] = useState(null)
 
   const onSwitchAction = () => {
     setIsSwitchOn(!isSwitchOn)
@@ -14,19 +16,22 @@ export const Edit = props => {
   var apiEndPoint = ""
   apiEndPoint = "/api/get-matching-users"
 
-  const [user, setUser] = useState(null)
+  console.log(props.user)
+
+  const [user, setUser] = useState(props.user)
 
   const fileUpload = e => {
-    console.log(e.target.files[0])
+    setPfp(URL.createObjectURL(e.target.files[0]))
   }
 
   useEffect(() => {
     if (props.user) {
       setUser(props.user)
       setIsSwitchOn(props.user.visible)
+      setPfp(props.user.avatar)
     }
+    console.log(isSwitchOn)
   }, [props.user])
-
 
   function editUsers() {
     let changes = {}
@@ -51,21 +56,32 @@ export const Edit = props => {
     if (document.getElementById("bio").value !== props.user.bio) {
       changes.bio = document.getElementById("bio").value
     }
-    axios
-      .put(
-        apiEndPoint,
-        {
-          changes
-        },
-        {headers: {"X-CSRFTOKEN": Cookies.get("csrftoken")}}
-      )
-      .then(res => {
-        setUser(res.data)
-        console.log(res)
-      })
-      .catch(err => {
-        console.log(err)
-      })
+    let headers = {"X-CSRFTOKEN": Cookies.get("csrftoken")}
+    if (JSON.stringify(changes) !== "{}") {
+      axios
+        .put("/api/update-user", {changes}, {headers})
+        .then(res => {
+          setUser(res.data)
+          props.updateSelf(res.data)
+          console.log(res)
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    }
+    if (pfp !== props.user.avatar) {
+      let formdata = new FormData()
+      formdata.append("file", document.getElementById("customFile").files[0])
+      headers["Content-Disposition"] = `attachment; filename=${document.getElementById("customFile").files[0].name}`
+      axios
+        .put("/api/update-profile-picture", formdata, {headers})
+        .then(res => {
+          setUser(res.data)
+        })
+        .catch(err => {
+          console.error(err)
+        })
+    }
   }
 
   return (
@@ -76,14 +92,14 @@ export const Edit = props => {
             <div className="container">
               <form>
                 <div class="form-group">
-                  <BootstrapSwitchButton width="300" onstyle="light" offstyle="outline-dark" style="border" onlabel="Visible" offlabel="Not Visible" onChange={onSwitchAction} />
+                  <BootstrapSwitchButton width="300" onstyle="light" offstyle="outline-dark" style="border" onlabel="Visible" offlabel="Not Visible" onChange={onSwitchAction} checked={isSwitchOn} />
                   <div class="row">
                     <div className="col">
                       <label for="text1" class="font-weight-bold">
                         Work
                       </label>
                     </div>
-                    <textarea class="form-control" id="work" rows="1" placeholder={user.work}></textarea>
+                    <textarea class="form-control" id="work" rows="1" defaultValue={user.work}></textarea>
                   </div>
 
                   <div class="row">
@@ -92,7 +108,7 @@ export const Edit = props => {
                         Job Title
                       </label>
                     </div>
-                    <textarea class="form-control" id="job" rows="1" placeholder={user.job_title}></textarea>
+                    <textarea class="form-control" id="job" rows="1" defaultValue={user.job_title}></textarea>
                   </div>
 
                   <div class="row">
@@ -101,7 +117,7 @@ export const Edit = props => {
                         School
                       </label>
                     </div>
-                    <textarea class="form-control" id="school" rows="1" placeholder={user.school}></textarea>
+                    <textarea class="form-control" id="school" rows="1" defaultValue={user.school}></textarea>
                   </div>
 
                   <div class="row">
@@ -110,7 +126,7 @@ export const Edit = props => {
                         Education Level
                       </label>
                     </div>
-                    <textarea class="form-control" id="education" rows="1" placeholder={user.education_level}></textarea>
+                    <textarea class="form-control" id="education" rows="1" defaultValue={user.education_level}></textarea>
                   </div>
 
                   <div class="row">
@@ -119,7 +135,7 @@ export const Edit = props => {
                         Hometown
                       </label>
                     </div>
-                    <textarea class="form-control" id="hometown" rows="1" placeholder={user.hometown}></textarea>
+                    <textarea class="form-control" id="hometown" rows="1" defaultValue={user.hometown}></textarea>
                   </div>
                 </div>
                 <div class="d-flex justify-content-center"></div>
@@ -147,7 +163,7 @@ export const Edit = props => {
                       height: "300px",
                       border: "2px solid black"
                     }}
-                    src={Image}
+                    src={pfp}
                     class="img-fluid d-flex justify-content-center"
                     alt="..."
                   />
@@ -164,7 +180,7 @@ export const Edit = props => {
                     <label for="text1" class="font-weight-bold">
                       Bio
                     </label>
-                    <textarea class="form-control" id="bio" rows="2" placeholder={user.bio}></textarea>
+                    <textarea class="form-control" id="bio" rows="2" defaultValue={user.bio}></textarea>
                   </div>
                 </div>
               </div>

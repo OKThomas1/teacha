@@ -12,7 +12,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 
 
-export const Match = () => {
+export const Match = ({ user }) => {
     const image = {
         width: "60%", // note to change picture height based on display size, implement if time allows
         objectFit: "cover",
@@ -60,16 +60,21 @@ export const Match = () => {
     const [userIndex, setUserIndex] = useState(0);
 
     useEffect(() => {
-        axios.get("/api/get-matching-users", { headers: { "X-CSRFTOKEN": Cookies.get("csrftoken") } })
-            .then(res => {
-                setMatchedUsers(res.data);
-                setDisplayedUser(res.data[userIndex]);
-                setUserIndex(userIndex + 1);
-            }).catch(err => {
-                console.log(err.stack())
-            })
-    }, [])
-
+        if (user && matchedUsers) {
+            axios.get("/api/get-matching-users", { headers: { "X-CSRFTOKEN": Cookies.get("csrftoken") } })
+                .then(res => {
+                    console.log(user);
+                    const result = res.data.filter((e) => {
+                        return (e.mentor != user.mentor)
+                    })
+                    setMatchedUsers(result);
+                    setDisplayedUser(result[userIndex]);
+                    setUserIndex(userIndex + 1);
+                }).catch(err => {
+                    console.log(err)
+                })
+        }
+    }, [user])
     const swipeRight = (e) => {
         e.preventDefault();
         const body = {
@@ -84,7 +89,6 @@ export const Match = () => {
                 "X-CSRFTOKEN": Cookies.get("csrftoken")
             }
         }).then(res => {
-            console.log(res);
             setDisplayedUser(matchedUsers[userIndex]);
             setUserIndex(userIndex + 1);
         }).catch(err => {
@@ -93,6 +97,7 @@ export const Match = () => {
             console.log(err.response);
         })
     }
+
 
     const swipeLeft = (e) => {
         e.preventDefault();
@@ -108,7 +113,6 @@ export const Match = () => {
                 "X-CSRFTOKEN": Cookies.get("csrftoken")
             }
         }).then(res => {
-            console.log(res);
             setDisplayedUser(matchedUsers[userIndex]);
             setUserIndex(userIndex + 1);
         }).catch(err => {
@@ -120,10 +124,9 @@ export const Match = () => {
 
     return (
         <div className="vh-100 w-100 text-center d-flex justify-center" style={{ backgroundColor: "#FFF4E0" }} >
-            {messageModal ? (<MessageModal MessageModal={MessageModal} setMessageModal={setMessageModal} />) : " "}
+            {messageModal ? (<MessageModal user={user} MessageModal={MessageModal} setMessageModal={setMessageModal} />) : " "}
 
             <div className=" w-50 m-auto" style={{ height: "90%", borderRadius: "2rem", overflow: "hidden", backgroundColor: "#8ac6d1" }}>
-
                 <button style={messageButtonDiv} onClick={(e) => {
                     e.preventDefault();
                     setMessageModal(true);
@@ -149,12 +152,11 @@ export const Match = () => {
                                 <h1>{displayedUser?.first_name} {displayedUser?.last_name}</h1>
                                 <p className="introText overflow-hidden" style={{ maxHeight: 110, height: 110 }}>
                                     <p className="font-weight-bold">Description: </p>
-                                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum
-                                    Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum
+                                    {displayedUser?.bio}
                                 </p>
                             </div>
 
-                            <div className="buttons d-flex justify-content-around mt-2">
+                            <div className="buttons d-flex justify-content-around ">
                                 <div class="buttonDiv d-flex flex-column text-center" >
                                     <button class="btn btn-light" style={matchButton}>
                                         < BsFillSkipBackwardCircleFill style={{ width: "100%", fontSize: "40px", color: "blue" }} />
@@ -184,14 +186,12 @@ export const Match = () => {
                         </div>
                     </div>
                 ) : (
-                    <div>
+                    <div className="bg-dark vh-100 text-white">
                         <h1>
                             No more matches....
                         </h1>
                     </div>
                 )}
-
-
 
             </div>
 

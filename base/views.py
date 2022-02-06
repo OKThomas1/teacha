@@ -20,8 +20,7 @@ def register(request):
             user = user_form.save()
             profile = profile_form.save(commit=False)
             profile.user = user
-            for key, value in request.FILES.items():
-                print(key)	
+
             if 'avatar' in request.FILES:
                 profile.avatar = request.FILES['avatar']
                 print('yes')
