@@ -8,7 +8,8 @@ from django.contrib.auth.models import User
 from base.models import Swipe, Profile, Message
 import requests
 import math
-import json
+from rest_framework.parsers import FileUploadParser
+
 
 # Create your views here.
 
@@ -233,10 +234,12 @@ class UpdateProfilePictureView(APIView):
 	def put(self, request):
 		try:
 			image = request.FILES['file']
+
 			Profile.objects.filter(user=request.user).update(avatar=image)
 			data = PublicProfileSerializer(request.user.profile).data
 			return Response(data, status=status.HTTP_200_OK)
-		except:
+		except Exception as ex:
+			print(ex)
 			return Response({"error": "could not update profile picture"}, status=status.HTTP_400_BAD_REQUEST)
 
 

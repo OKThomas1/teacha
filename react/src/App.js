@@ -1,8 +1,9 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom"
-import { Home } from "./Components/Home/Home"
-import { Edit } from "./Components/Edit-profile/Edit"
-import { Settings } from "./Components/Settings/Settings"
-import { Match } from "./Components/Match/Match"
+
+import {BrowserRouter, Routes, Route, Redirect} from "react-router-dom"
+import {Home} from "./Components/Home/Home"
+import {Edit} from "./Components/Edit-profile/Edit"
+import {Settings} from "./Components/Settings/Settings"
+import {Match} from "./Components/Match/Match"
 import Header from "./Components/Header/Header"
 import { useEffect, useState } from "react"
 import axios from "axios"
@@ -37,6 +38,7 @@ function App() {
       <BrowserRouter>
         <Header />
         <Routes>
+          <Route path="/" element={<Redirect to={{path: "/home"}} />} />
           <Route path="/home" element={<Home user={self} />} />
           <Route path="/edit" element={<Edit user={self} updateSelf={updateSelf} />} />
           <Route path="/settings" element={<Settings />} />
