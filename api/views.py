@@ -6,6 +6,7 @@ from .serializers import MessageSerializer, PublicProfileSerializer, PrivateProf
 from django.contrib.auth.models import User
 from base.models import Swipe, Profile, Message
 import requests
+import math
 
 # Create your views here.
 
@@ -19,9 +20,27 @@ class GetSelfView(APIView):
         return Response(data, status=status.HTTP_200_OK)
 
 
-def match_user_algorithm(user):
-    return Profile.objects.exclude(mentor=user.profile.mentor, user=user)
-
+def match_user_algorithm(user, settings):
+	users = Profile.objects.exclude(mentor=user.profile.mentor, user=user)
+	if settings['min_age']:
+		users = users.filter(age__gte=settings['min_age'])
+	if settings['max_age']:
+		users = users.filter(age__lte=settings['max_age'])
+	if settings['race']:
+		users = users.filter(race=settings['race'])
+	if settings['gender']:
+		users = users.filter(gender=settings['gender'])
+	if settings['radius']:
+		if user.profile.lat and user.profile.lng:
+			km = int(settings['radius'])
+			lat = km / 110.574
+			lng = km/111.32*math.cos(lat)
+			x1 = user.profile.lat - lat
+			x2 = user.profile.lat + lat
+			y1 = user.profile.lng - lng
+			y2 = user.profile.lng + lng
+			users = users.filter(lat__gte=x1, lat__lte=x2, lng__gte=y1, lng__lte=y2)
+	return users 
 
 class GetMatchingUsersView(APIView):
 
@@ -34,7 +53,7 @@ class GetMatchingUsersView(APIView):
 			if lat != request.user.profile.lat or lng != request.user.profile.lng:
 				request.user.profile.update(lat=lat, lng=lng)
 		
-		users = match_user_algorithm(request.user)
+		users = match_user_algorithm(request.user, request.data['args'])
 		print(len(users))
 		if len(users) > 0:
 			serialized_users = []
@@ -165,7 +184,15 @@ class SendMessageView(APIView):
 
 
 def validate_profile_changes(changes):
-	return []
+	valid_keys = ['work', 'job_title', 'school', 'education_level', 'hometown']
+	errors = []
+	for key, value in changes.items():
+		if key not in valid_keys:
+			errors.append(f'{key} is not a valid key')
+		if len(str(value)) > 50:
+			errors.append(f'{key} value is too long')
+		changes[key] = str(value)
+	return errors
 
 
 class UpdateProfileView(APIView):
@@ -174,7 +201,13 @@ class UpdateProfileView(APIView):
 		errors = validate_profile_changes(changes)
 		if len(errors) > 0:
 			return Response(errors, status=status.HTTP_400_BAD_REQUEST)
-		request.user.profile.update(**changes)
+		try:
+			if request.data['picture']:
+				request.user.profile.update(**changes, avatar=request.data['picture'])
+			else:
+				request.user.profile.update(**changes)
+		except:
+			return Response({"error":"failed to update user"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 		return Response({"success": "successfully updated user"}, status=status.HTTP_200_OK)
 
 
